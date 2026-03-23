@@ -11,8 +11,8 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@hashgraph/sdk": "^2.81.0",
-    "@veridex/agentic-payments": "latest",
-    "@veridex/sdk": "latest",
+    "@veridex/agentic-payments": "^2.0.4",
+    "@veridex/sdk": "^1.0.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^0.577.0",
     "next": "16.2.1",
