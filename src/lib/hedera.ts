@@ -17,13 +17,30 @@ import {
 // ── Hedera Client Singleton ────────────────────────────────────────────
 let _client: Client | null = null;
 
+/**
+ * Parse a private key string, handling ECDSA (0x-prefixed hex),
+ * ED25519, and DER-encoded formats.
+ */
+function parsePrivateKey(keyStr: string): PrivateKey {
+  const trimmed = keyStr.trim();
+  if (trimmed.startsWith("0x")) {
+    return PrivateKey.fromStringECDSA(trimmed.slice(2));
+  }
+  // Try DER first (302e... prefix), then fall back to ED25519
+  try {
+    return PrivateKey.fromStringDer(trimmed);
+  } catch {
+    return PrivateKey.fromStringED25519(trimmed);
+  }
+}
+
 export function getClient(): Client {
   if (_client) return _client;
 
   const accountId = process.env.HEDERA_ACCOUNT_ID;
-  const privateKey = process.env.HEDERA_PRIVATE_KEY;
+  const privateKeyStr = process.env.HEDERA_PRIVATE_KEY;
 
-  if (!accountId || !privateKey) {
+  if (!accountId || !privateKeyStr) {
     throw new Error(
       "HEDERA_ACCOUNT_ID and HEDERA_PRIVATE_KEY must be set in environment"
     );
@@ -32,7 +49,7 @@ export function getClient(): Client {
   const network = process.env.HEDERA_NETWORK || "testnet";
   _client =
     network === "mainnet" ? Client.forMainnet() : Client.forTestnet();
-  _client.setOperator(accountId, privateKey);
+  _client.setOperator(accountId, parsePrivateKey(privateKeyStr));
   _client.setDefaultMaxTransactionFee(new Hbar(5));
   _client.setDefaultMaxQueryPayment(new Hbar(1));
 
@@ -166,7 +183,7 @@ export async function createScheduledTransfer(
   const scheduleTx = new ScheduleCreateTransaction()
     .setScheduledTransaction(innerTransfer)
     .setScheduleMemo(`Veridex: ${memo}`)
-    .setAdminKey(PrivateKey.fromStringDer(process.env.HEDERA_PRIVATE_KEY!));
+    .setAdminKey(parsePrivateKey(process.env.HEDERA_PRIVATE_KEY!));
 
   const response = await scheduleTx.execute(client);
   const receipt = await response.getReceipt(client);

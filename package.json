@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@hashgraph/sdk": "^2.81.0",
     "@veridex/agentic-payments": "file:../../../packages/agent-sdk",
     "@veridex/sdk": "file:../../../packages/sdk",

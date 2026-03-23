@@ -1,7 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Home, PlusCircle, ListTodo, Shield, History, Wallet } from 'lucide-react';
+import { Home, PlusCircle, ListTodo, Shield, History, Wallet, Bot } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Veridex Agent Firewall | Hedera',
@@ -59,6 +59,13 @@ export default function RootLayout({
                 <div className="nav-item">
                   <Shield size={18} />
                   <span>Policy Console</span>
+                </div>
+              </Link>
+              
+              <Link href="/agent">
+                <div className="nav-item">
+                  <Bot size={18} />
+                  <span>AI Agent</span>
                 </div>
               </Link>
               

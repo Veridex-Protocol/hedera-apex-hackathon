@@ -197,8 +197,30 @@ export default function Dashboard() {
                   <td style={{ padding: '16px 24px' }}>
                     {statusBadge(intent.status)}
                   </td>
-                  <td style={{ padding: '16px 24px', fontFamily: 'monospace', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                    {intent.scheduleId ? intent.scheduleId : intent.txId ? intent.txId.substring(0, 20) + '...' : '—'}
+                  <td style={{ padding: '16px 24px', fontFamily: 'monospace', fontSize: '0.7rem' }}>
+                    {intent.scheduleId ? (
+                      <a
+                        href={`https://hashscan.io/testnet/schedule/${intent.scheduleId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1"
+                        style={{ color: 'var(--brand-primary)' }}
+                      >
+                        {intent.scheduleId} <ExternalLink size={10} />
+                      </a>
+                    ) : intent.txId && intent.txId !== '—' ? (
+                      <a
+                        href={`https://hashscan.io/testnet/transaction/${intent.txId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1"
+                        style={{ color: 'var(--accent-cyan)' }}
+                      >
+                        {intent.txId.substring(0, 24)}... <ExternalLink size={10} />
+                      </a>
+                    ) : (
+                      <span style={{ color: 'var(--text-muted)' }}>—</span>
+                    )}
                   </td>
                 </tr>
               ))}
